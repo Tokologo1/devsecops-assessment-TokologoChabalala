@@ -1,2 +1,0 @@
-# devsecops-assessment-TokologoChabalala
-Assessment
