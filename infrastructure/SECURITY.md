@@ -18,8 +18,6 @@
 
 ## Scanning Integration
 - **Hadolint** for Dockerfile best practices.
-- **kube-linter** for Kubernetes manifests.
-- **Conftest/OPA** for custom policy gates (Docker/K8s/CI).
 - **Gitleaks** for hardcoded secret detection.
 - CI workflow runs all scanners on PRs and uploads reports.
 
@@ -28,10 +26,13 @@
 - Policy exceptions: adjust `policy/*.rego` with clear comments & temporary waivers reviewed via PR.
 
 ## Quality Gates
-- `scripts/validate.sh` fails on policy/linting violations.
 - `scripts/scan-secrets.sh` fails on **HIGH-confidence** findings; MEDIUM/LOW reported for triage.
 - CI job fails if any gate fails; artifacts (reports) available for review.
 
 ## Monitoring & Ops
-- Recommend enabling runtime container scanning in cluster (Falco/OPA Gatekeeper).
+- Recommend enabling runtime container scanning in cluster
 - Centralize logs of CI runs; alert on suspicious triggers.
+
+# Build and scan image with Trivy (optional, local)
+docker build -t country-backend:secure -f application/Dockerfile .
+trivy image --severity HIGH,CRITICAL country-backend:secure
