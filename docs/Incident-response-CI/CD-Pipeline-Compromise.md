@@ -1,7 +1,8 @@
-Here’s a structured Incident Response Analysis for a CI/CD pipeline compromise, tailored for GitHub Actions:
+**Here’s a structured Incident Response Analysis for a CI/CD pipeline compromise, tailored for GitHub Actions:**
 
-Incident Response Plan: CI/CD Pipeline Compromise
-1️⃣ Preparation
+**Incident Response Plan: CI/CD Pipeline Compromise**
+<br>
+**1.Preparation**
 
 Maintain up-to-date access logs, audit logs, and secrets rotation.
 
@@ -11,9 +12,9 @@ Enable branch protection rules (PR reviews, required status checks).
 
 Keep team contact lists for incident communication.
 
-2️⃣ Detection
+**2.Detection**
 
-Indicators of compromise:
+**Indicators of compromise:**
 
 Unexpected or suspicious commits in protected branches.
 
@@ -25,7 +26,7 @@ Security scanner alerts in the pipeline.
 
 GitHub Actions log anomalies (failed checks, unknown runners).
 
-Detection tools:
+**Detection tools:**
 
 GitHub audit logs (Settings → Security → Audit Log).
 
@@ -33,9 +34,9 @@ GitHub Actions workflow run logs.
 
 GitHub Advanced Security (if available) for secret scanning.
 
-3️⃣ Containment
+**3.Containment**
 
-Immediate actions:
+**Immediate actions:**
 
 Pause deployments by disabling workflow triggers.
 
@@ -47,9 +48,9 @@ Isolate affected runners if using self-hosted runners.
 
 Check recent merges/commits for malicious code changes.
 
-4️⃣ Investigation
+**4.Investigation**
 
-Identify who, what, when:
+**Identify who, what, when:**
 
 Which workflow ran suspiciously.
 
@@ -59,9 +60,9 @@ Check logs for artifacts or secrets accessed.
 
 Confirm whether any secrets or production systems were accessed.
 
-5️⃣ Eradication
+**5.Eradication**
 
-Revert suspicious commits.
+**Revert suspicious commits.**
 
 Rotate all secrets and tokens used in GitHub Actions.
 
@@ -69,7 +70,7 @@ Remove any unauthorized access (users, collaborators, runners).
 
 Patch workflow vulnerabilities (e.g., using unverified actions).
 
-6️⃣ Recovery
+**6.Recovery**
 
 Re-enable workflows gradually.
 
@@ -77,9 +78,9 @@ Validate deployments in a staging environment before production.
 
 Restore production code and secrets only after verification.
 
-7️⃣ Lessons Learned / Post-Incident
+**7.Lessons Learned / Post-Incident**
 
-Conduct a post-mortem:
+**Conduct a post-mortem:**
 
 How did the attacker gain access?
 
@@ -87,7 +88,7 @@ What workflow configurations were weak?
 
 Were code reviews or branch protections bypassed?
 
-Improvements:
+**Improvements:**
 
 Enable required reviews and signed commits.
 
@@ -97,15 +98,15 @@ Monitor workflow runs and alerts in real-time.
 
 Enforce least privilege on GitHub tokens and secrets.
 
-8️⃣ Communication Plan Outline
+**8.Communication Plan Outline**
 
-Internal:
+**Internal:**
 
 Notify DevOps/Security teams immediately.
 
 Provide updates to stakeholders as investigation progresses.
 
-External (if applicable):
+**External (if applicable):**
 
 Prepare messaging for clients if production systems were affected.
 
