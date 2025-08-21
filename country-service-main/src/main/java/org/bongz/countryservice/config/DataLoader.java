@@ -32,8 +32,8 @@ public class DataLoader implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         try {
             // Fetch data from the external API
-            ApiCountry[] apiCountries = restTemplate.getForObject("https://restcountries.com/v3.1/all", ApiCountry[].class);
-
+            //ApiCountry[] apiCountries = restTemplate.getForObject("https://restcountries.com/v3.1/all", ApiCountry[].class);
+            ApiCountry[] apiCountries = restTemplate.getForObject("https://restcountries.com/v3.1/all?fields=name,flags,capital,population", ApiCountry[].class);
             if (apiCountries != null) {
                 // Save data to the database
                 Arrays.stream(apiCountries).forEach(apiCountry -> {

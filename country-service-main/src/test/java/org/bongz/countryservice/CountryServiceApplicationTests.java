@@ -3,8 +3,8 @@ package org.bongz.countryservice;
 import org.bongz.countryservice.model.Country;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 class CountryServiceApplicationTests {
 
-    @MockBean
+    @MockitoBean
     private RestTemplate restTemplate; // Mock the RestTemplate
 
     @Test
