@@ -1,6 +1,6 @@
-Here’s a structured Incident Response Analysis for a CI/CD pipeline compromise, tailored for GitHub Actions:
+**Here’s a structured Incident Response Analysis for a CI/CD pipeline compromise, tailored for GitHub Actions:**
 
-Incident Response Plan: CI/CD Pipeline Compromise
+**Incident Response Plan: CI/CD Pipeline Compromise**
 **1.Preparation**
 
 Maintain up-to-date access logs, audit logs, and secrets rotation.
