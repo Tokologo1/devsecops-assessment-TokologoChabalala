@@ -1,6 +1,6 @@
 Usage
 1. Clone repository (or place script in project root)
-git clone https://your-repo.git
+git clone https://assess.git
 cd your-repo
 
 2. Run the script
@@ -18,7 +18,7 @@ Docker/K8s/CI/CD validation:
 
 Secrets scan:
 
-⚠️ Secrets detected:
+Secrets detected:
 {
   "file": ".env",
   "line": 3,
