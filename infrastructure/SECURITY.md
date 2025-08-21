@@ -34,5 +34,5 @@
 - Centralize logs of CI runs; alert on suspicious triggers.
 
 # Build and scan image with Trivy (optional, local)
-docker build -t country-backend:secure -f application/Dockerfile .
-trivy image --severity HIGH,CRITICAL country-backend:secure
+- docker build -t country-backend:secure -f application/Dockerfile
+- trivy image --severity HIGH,CRITICAL country-backend:secure
