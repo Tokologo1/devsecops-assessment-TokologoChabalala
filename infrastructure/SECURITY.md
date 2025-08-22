@@ -1,37 +1,31 @@
-# Security Posture & Decisions
+# Container Security Decisions
 
 ## Base Images
-- **Builder:** `maven:3.9.9-eclipse-temurin-17` (build stage only)
-- **Runtime:** `eclipse-temurin:17-jre-alpine` (minimal footprint)
-- No `:latest` tags; explicit versions to ensure reproducibility.
+- Backend: `maven:3.9.9-eclipse-temurin-17` (build only), `eclipse-temurin:17-jre-alpine` (runtime).
+- Frontend: `node:20-alpine` (build only), `nginx:alpine` (runtime).
+- Avoid `:latest`; pin versions for reproducibility.
 
 ## Dependency Management
-- Maven resolves deps in a dedicated cached layer (`dependency:go-offline`).
-- CI scans recommended (e.g., OWASP Dependency-Check or Trivy filesystem scan).
+- Maven `dependency:go-offline` for cache repeatability.
+- `npm ci` to ensure lockfile integrity.
 
-## Runtime Security
-- Non-root `app` user in final image.
-- Read-only root filesystem with `tmpfs:/tmp`.
-- Dropped all Linux capabilities; `no-new-privileges`.
-- Healthchecks & resource limits (Compose/K8s).
-- K8s securityContext: `runAsNonRoot`, `readOnlyRootFilesystem`, `allowPrivilegeEscalation: false`, `seccompProfile: RuntimeDefault`.
+## Runtime Hardening
+- Run as **non-root** user in both images.
+- **read-only** filesystem and **tmpfs** for `/tmp` (Java) via Compose/K8s.
+- Drop **all Linux capabilities**; set **no-new-privileges**.
+- Health checks for both services.
+- Network split: API and static web served by separate containers.
 
-## Scanning Integration
-- **Hadolint** for Dockerfile best practices.
-- **kube-linter** for Kubernetes manifests.
-- **Conftest/OPA** for custom policy gates (Docker/K8s/CI).
-- **Gitleaks** for hardcoded secret detection.
-- CI workflow runs all scanners on PRs and uploads reports.
+## Scanning
+- **Trivy** on images; fail build on HIGH/CRITICAL.
+- **Gitleaks** for secrets; fail on confirmed leaks.
+- **kube-linter** for K8s manifest misconfig.
+- Optional SBOM (Syft) for compliance.
 
-## Handling False Positives
-- Secrets: `gitleaks.toml` allowlist for docs/examples/tests.
-- Policy exceptions: adjust `policy/*.rego` with clear comments & temporary waivers reviewed via PR.
+## Secure Deployment
+- Docker Compose: enforces read-only, caps, nnP, resources.
+- K8s (if used): set `runAsNonRoot`, `readOnlyRootFilesystem`, `allowPrivilegeEscalation: false`, `seccompProfile: RuntimeDefault`, resource requests/limits, liveness/readiness probes.
 
-## Quality Gates
-- `scripts/validate.sh` fails on policy/linting violations.
-- `scripts/scan-secrets.sh` fails on **HIGH-confidence** findings; MEDIUM/LOW reported for triage.
-- CI job fails if any gate fails; artifacts (reports) available for review.
-
-## Monitoring & Ops
-- Recommend enabling runtime container scanning in cluster (Falco/OPA Gatekeeper).
-- Centralize logs of CI runs; alert on suspicious triggers.
+## Operations
+- Rotate secrets; never bake secrets into images.
+- Keep images updated; rebuild on base image updates.

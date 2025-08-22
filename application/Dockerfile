@@ -1,42 +1,38 @@
 # ===============================
 # Stage 1: Build Backend (Spring Boot)
 # ===============================
-FROM maven:3.9.3-eclipse-temurin-17 AS backend-build
-WORKDIR /app/backend
+FROM maven:3.9.9-eclipse-temurin-17 AS backend-build
+WORKDIR /src
 
-# Copy backend code
+# Cache deps
 COPY backend/pom.xml .
+RUN mvn -q -DskipTests dependency:go-offline
+
+# Build
 COPY backend/src ./src
-
-# Build backend JAR
-RUN mvn clean package -DskipTests
+RUN mvn -q -DskipTests clean package
 
 # ===============================
-# Stage 2: Build Frontend (React)
+# Stage 2: Runtime (minimal, non-root)
 # ===============================
-FROM node:20-alpine AS frontend-build
-WORKDIR /app/frontend
-
-# Copy frontend code
-COPY frontend/package*.json ./
-RUN npm install
-COPY frontend/ ./
-RUN npm run build
-
-# ===============================
-# Stage 3: Final image
-# ===============================
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-# Copy backend JAR
-COPY --from=backend-build /app/backend/target/country-service-0.0.1-SNAPSHOT.jar ./backend.jar
+# Minimal runtime deps & CA certs
+RUN apk add --no-cache ca-certificates tzdata && update-ca-certificates
 
-# Copy frontend build (static files)
-COPY --from=frontend-build /app/frontend/build ./frontend
+# Non-root user
+RUN addgroup -S app && adduser -S app -G app
+USER app
 
-# Expose backend port
+# Copy built jar
+COPY --from=backend-build /src/target/*-SNAPSHOT.jar app.jar
+
+# Healthcheck (expects Spring Boot Actuator)
+HEALTHCHECK --interval=30s --timeout=5s --retries=5 \
+  CMD wget -qO- http://127.0.0.1:8081/actuator/health || exit 1
+
+ENV JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -XX:MaxRAMPercentage=75"
 EXPOSE 8081
 
-# Start backend
-ENTRYPOINT ["java","-jar","backend.jar"]
+ENTRYPOINT ["sh","-c","java $JAVA_OPTS -jar /app/app.jar"]

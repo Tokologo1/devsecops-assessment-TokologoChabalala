@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: country-api-allow-namespace
+spec:
+  podSelector:
+    matchLabels: country-api 
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - podSelector: {}   # tighten to only specific apps/namespaces as needed
+  egress:
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 80

@@ -30,8 +30,8 @@ echo "Scan complete. Report saved to $REPORT_FILE"
 
 # Print summary
 if [ -s "$REPORT_FILE" ]; then
-    echo "⚠️  Secrets detected:"
+    echo "Secrets detected:"
     jq '.[] | {file: .file, line: .line, description: .description, entropy: .entropy}' "$REPORT_FILE"
 else
-    echo "✅ No hardcoded secrets detected."
+    echo "No hardcoded secrets detected."
 fi
